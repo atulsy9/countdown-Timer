@@ -37,11 +37,27 @@
   border-color: white;
   border-width: 1.5px;
   font-weight: 200;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #ffffff;
+  color: #121212;
 }
 
 .time {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 15rem;
+  width: auto;
+}
+
+.dateForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.completeStatus {
+  color: #5f0b81;
 }
