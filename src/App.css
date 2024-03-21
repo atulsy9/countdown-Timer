@@ -63,12 +63,15 @@
   color: #5f0b81;
 }
 
-@media only screen and (max-width: 576px) {
+@media (max-width: 576px) {
   .header {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     margin-bottom: 2rem;
+  }
+  .mainDiv {
+    justify-content: space-evenly;
   }
 }
