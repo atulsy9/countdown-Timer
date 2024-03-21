@@ -1,36 +1,37 @@
+/* eslint-disable no-unused-expressions */
 import { useSnackbar } from "notistack";
 import "./App.css";
 import TimerCard from "./TimerCard";
 import { useState, useEffect } from "react";
+import Grid from "@mui/material/Grid";
 
 function App() {
   const [data, setData] = useState();
   const [Timer, SetTimer] = useState(false);
   const [leftTime, setLeftTime] = useState(() => getTheTimeDifference(data));
-  const [token, SetToken] = useState(0);
-  const { enqueueSnackbar } = useSnackbar();
-  const [status, SetStatus] = useState(false);
+  // const { enqueueSnackbar } = useSnackbar();
+  const [status, SetStatus] = useState(true);
+  const [error, Seterror] = useState("");
   const validateData = (val) => {
-    const range = new Date(val) - new Date();
-    const validRange = 99 * 24 * 60 * 60 * 1000;
-    if (!token) {
+    if (!val) {
+      Seterror("Date and time can't be Empty");
       return false;
     }
+    const range = new Date(val) - new Date();
+    const validRange = 100 * 24 * 60 * 60 * 1000;
     if (range > validRange) {
-      enqueueSnackbar("Date can't be more than 99Days", { variant: "error" });
+      Seterror("Date can't be more than 100Days");
       return false;
     }
     if (range < 0) {
-      enqueueSnackbar("Date can't be less than the current Date", {
-        variant: "error",
-      });
+      Seterror("Date can't be less than the current Date");
       return false;
     }
     if (!range) {
-      enqueueSnackbar("Check the date or timing", { variant: "error" });
+      Seterror("Date or Timing can't be less than current date & time");
       return false;
     }
-    enqueueSnackbar("Timer has been set Sucessfully.", { variant: "success" });
+    // SetStatus(true);
     return true;
   };
 
@@ -43,8 +44,8 @@ function App() {
       seconds: 0,
     };
     if (totalTimeLeft < 0) {
-      SetStatus(true);
-      SetToken(0);
+      SetStatus(false);
+      Seterror("The Countdown is over! What's next on your adventure ?");
       return dateObj;
     }
     if (totalTimeLeft) {
@@ -57,14 +58,20 @@ function App() {
   }
 
   const handelOnsubmit = (e) => {
-    e.preventDefault();
-    SetToken(Math.random());
-    let inputDate = e.target.date.value;
-    let isValid = validateData(inputDate);
-    if (isValid) {
-      SetTimer(Timer ? false : true);
+    if (status) {
+      e.preventDefault();
+      let inputDate = e.target.date.value;
+      let isValid = validateData(inputDate);
+      if (isValid) {
+        SetTimer(Timer ? false : true);
+        setData(new Date(inputDate));
+        Timer ? window.location.reload() : null;
+      } else {
+        !Timer ? SetStatus(false) : window.location.reload();
+      }
+    } else {
+      window.location.reload();
     }
-    !Timer ? setData(new Date(inputDate)) : window.location.reload();
   };
 
   useEffect(() => {
@@ -78,7 +85,6 @@ function App() {
     } else {
       setLeftTime(getTheTimeDifference(data));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Timer]);
 
   return (
@@ -92,25 +98,26 @@ function App() {
         <input
           className="button"
           type="submit"
-          value={Timer ? "Cancel Timer" : "Start Timer"}
+          value={
+            status ? (Timer ? "Cancel Timer" : "Start Timer") : "Reset Timer"
+          }
         />
       </form>
-      <div className="time">
-        {Object.entries(leftTime).map((val) => {
-          const label = val[0];
-          const value = val[1];
-          return (
-            <TimerCard value={value} key={label}>
-              {label}
-            </TimerCard>
-          );
-        })}
-      </div>
       {status ? (
-        <div className="completeStatus">
-          The Countdown is over! What's next on your adventure ?
-        </div>
-      ) : null}
+        <Grid className="time" container>
+          {Object.entries(leftTime).map((val) => {
+            const label = val[0];
+            const value = val[1];
+            return (
+              <TimerCard value={value} key={label}>
+                {label}
+              </TimerCard>
+            );
+          })}
+        </Grid>
+      ) : (
+        <div className="completeStatus">{error}</div>
+      )}
     </div>
   );
 }
