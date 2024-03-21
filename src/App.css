@@ -7,7 +7,6 @@
   justify-content: center;
 }
 .header {
-  /* height: auto; */
   font-size: 50px;
   font-weight: 600;
   color: #ffffff;
@@ -48,7 +47,7 @@
 .time {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: auto !important;
   margin: 16px !important;
 }
@@ -60,7 +59,7 @@
 }
 
 .completeStatus {
-  margin-top: 2rem;
+  margin: 1.5rem;
   color: #5f0b81;
 }
 
@@ -70,5 +69,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 2rem;
   }
 }

@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-expressions */
-import { useSnackbar } from "notistack";
 import "./App.css";
 import TimerCard from "./TimerCard";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 
 function App() {
-  const [data, setData] = useState();
-  const [Timer, SetTimer] = useState(false);
+  const LOCALSTORAGE = JSON.parse(localStorage.getItem("timeStamp"));
+  const [data, setData] = useState(
+    LOCALSTORAGE ? new Date(LOCALSTORAGE) : null
+  );
+  const [Timer, SetTimer] = useState(LOCALSTORAGE ? true : false);
   const [leftTime, setLeftTime] = useState(() => getTheTimeDifference(data));
-  // const { enqueueSnackbar } = useSnackbar();
   const [status, SetStatus] = useState(true);
   const [error, Seterror] = useState("");
   const validateData = (val) => {
@@ -31,7 +32,6 @@ function App() {
       Seterror("Date or Timing can't be less than current date & time");
       return false;
     }
-    // SetStatus(true);
     return true;
   };
 
@@ -45,7 +45,9 @@ function App() {
     };
     if (totalTimeLeft < 0) {
       SetStatus(false);
-      Seterror("The Countdown is over! What's next on your adventure ?");
+      Seterror(
+        " 🎉 Congratulations !!! The Countdown is over! What's next on your adventure?"
+      );
       return dateObj;
     }
     if (totalTimeLeft) {
@@ -65,11 +67,16 @@ function App() {
       if (isValid) {
         SetTimer(Timer ? false : true);
         setData(new Date(inputDate));
-        Timer ? window.location.reload() : null;
+        localStorage.setItem("timeStamp", JSON.stringify(inputDate));
+        if (Timer) {
+          localStorage.clear();
+          window.location.reload();
+        }
       } else {
         !Timer ? SetStatus(false) : window.location.reload();
       }
     } else {
+      localStorage.clear();
       window.location.reload();
     }
   };
@@ -94,7 +101,12 @@ function App() {
         <span className="header2"> Timer</span>
       </div>
       <form className="dateForm" onSubmit={handelOnsubmit}>
-        <input type="datetime-local" id="date" className="date" />
+        <input
+          type="datetime-local"
+          id="date"
+          defaultValue={LOCALSTORAGE}
+          className="date"
+        />
         <input
           className="button"
           type="submit"
