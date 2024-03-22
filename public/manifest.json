@@ -8,12 +8,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "stopwatch-countdown-thumbnail.pnglogo192.png",
+      "src": "timer-transparent-img.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "stopwatch-countdown-thumbnail.png",
+      "src": "timer-transparent-img.png",
       "type": "image/png",
       "sizes": "512x512"
     }
